@@ -1,0 +1,28 @@
+{
+  "name": "byod-game-engine",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server/src/index.js",
+  "dependencies": {
+    "can-observe": "^2.2.0",
+    "can-reflect": "^1.17.7",
+    "mariah": "git+https://github.com/imaustink/mariah.git",
+    "ws": "^6.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.9.0"
+  },
+  "scripts": {
+    "test": "ava /server/test/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatlard1993/byod-game-engine.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fatlard1993/byod-game-engine/issues"
+  },
+  "homepage": "https://github.com/fatlard1993/byod-game-engine#readme"
+}
