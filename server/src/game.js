@@ -1,17 +1,23 @@
+const EventEmitter = require('events');
+
+const uuid = require('uuid/v4');
+
 const { ObservableObject } = require('./observables');
 const Log = require('./log');
 
-module.exports = class Game {
+module.exports = class Game extends EventEmitter {
   constructor(socketServer){
-    this.state = new ObservableObject({
-      id: String(Math.random()).slice(2),
-      users: {}
-    });
+		super();
+
+    this.id = uuid();
+    this.state = new ObservableObject({});
+    this.users = {};
 
     this.state.on('change', (event, property, value) => {
-			Log()('Game state change - ', event, property, value, this.state);
+			Log(1)('Game state change - ', event, property, value, this.state);
 
-			socketServer.broadcast({ type: 'gameState', state: { [property]: value } });
+			socketServer.broadcast('gameState', { [property]: value });
     });
   }
+
 };

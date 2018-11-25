@@ -1,41 +1,39 @@
 //trigger events on: incoming connections, player joining, player leaving
 
-// clientConnection.on('message', user.onSocketMessage);
-
-// clientConnection.send('Welcome aboard, heres something good to eat');
-
 const { ObservableObject } = require('./observables');
+const uuid = require('uuid/v4');
+const UsersMap = require('./usersMap');
 const Log = require('./log');
+const Constants = require('./constants');
+const EventEmitter = require('events');
 
-module.exports = class User {
-  constructor(socketServer, clientConnection){
-		var id = String(Math.random()).slice(2);
+module.exports = class User extends EventEmitter {
+  constructor(socketServer, socket){
+		super();
+
+		this.socket = socket;
+		this.id = uuid();
 
     this.state = new ObservableObject({
-      id: id,
-			name: `nameless #${id.slice(0, 2)}`,
-			socket: clientConnection
+			name: `nameless #${this.id}`
 		});
 
 		Log(1)('New user state:', this.state);
 
     this.state.on('change', (event, property, value) => {
-			Log()('User state change - ', event, property, value);
+			Log()('User state change - ', property, value);
 
-      socketServer.broadcast({ type: 'userState', id: this.state.id, state: { [property]: value } });
+      socket.emit({ type: 'userState', state: { [property]: value } });
 		});
 
-		clientConnection.on('message', this.onSocketMessage.bind(this));
+		socketServer.on(Constants.USER_STATE, ({ id }, state) => {
+			if(this.id === id) Object.assign(this.state, state);
+		});
+
+		UsersMap[this.id] = this;
 	}
 
-	onSocketMessage(data){
-		Log()(`${this.state.name} sent: ${data}`);//data = '{ type: 'updateState', state: { name: "bonbon", race: "fairy" }  }'
-
-		try{ data = JSON.parse(data); }
-		catch(e){ data = { type: data }; }
-
-		if(data.type === 'updateState') this.state = Object.assign(this.state, data.state);
-
-		else Log()('unknown command');
+	kill(){
+		delete UsersMap[this.id];
 	}
 };
