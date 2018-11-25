@@ -22,7 +22,7 @@ module.exports = class User {
     this.state.on('change', (event, property, value) => {
 			Log()('User state change - ', event, property, value);
 
-      socketServer.broadcast({ type: 'userState', [property]: value });
+      socketServer.broadcast({ type: 'userState', state: { [property]: value } });
 		});
 
 		clientConnection.on('message', this.onSocketMessage.bind(this));
