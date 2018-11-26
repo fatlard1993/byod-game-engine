@@ -15,7 +15,8 @@
     "eslint": "^5.9.0"
   },
   "scripts": {
-    "test": "ava /server/test/**/*.test.js"
+    "test": "ava /server/test/**/*.test.js",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
