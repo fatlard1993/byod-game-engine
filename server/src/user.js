@@ -23,7 +23,7 @@ module.exports = class User extends EventEmitter {
     this.state.on('change', (event, property, value) => {
 			Log()('User state change - ', property, value);
 
-      socket.emit({ type: 'userState', state: { [property]: value } });
+      socket.reply('userState', { [property]: value });
 		});
 
 		socketServer.on(Constants.USER_STATE, ({ id }, state) => {
