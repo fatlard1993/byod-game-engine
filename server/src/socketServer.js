@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const Url = require('url');
 const Log = require('./log');
+const Constants = require('./constants');
 
 module.exports = class SocketServer extends WebSocket.Server {
 	constructor({ server, socketPath = '/api', settings }){//there was a ... before settings that was linted red
@@ -20,16 +21,16 @@ module.exports = class SocketServer extends WebSocket.Server {
 			else socket.destroy();
 		});
 
-		this.on('connection', (clientConnection) => {
-			clientConnection.reply = (type, payload) => {
+		this.on('connection', (clientSocket) => {
+			clientSocket.reply = (type, payload) => {
 				var message = JSON.stringify({ type, payload });
 
 				Log.warn()('Send to client socket: ', message);
 
-				clientConnection.send(message);
+				clientSocket.send(message);
 			};
 
-			clientConnection.on('message', (data) => {
+			clientSocket.on('message', (data) => {
 				try{ data = JSON.parse(data); }
 
 				catch(e){
@@ -40,7 +41,13 @@ module.exports = class SocketServer extends WebSocket.Server {
 
 				Log()('Client socket message: ', data.type, data.payload);
 
-				this.emit(data.type, clientConnection, data.payload);
+				this.emit(data.type, clientSocket, data.payload);
+			});
+
+			clientSocket.on('close', () => {
+				Log.warn()('Client socket disconnect: ');
+
+				this.emit(Constants.USER_DISCONNECT, clientSocket);
 			});
 		});
 	}
