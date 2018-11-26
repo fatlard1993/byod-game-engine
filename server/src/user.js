@@ -30,7 +30,7 @@ module.exports = class User extends EventEmitter {
 			if(this.id === id) Object.assign(this.state, state);
 		});
 
-		UsersMap[this.id] = this;
+    UsersMap[this.id] = this;
 	}
 
 	kill(){

@@ -4,8 +4,8 @@ const Log = require('./log');
 const Constants = require('./constants');
 
 module.exports = class SocketServer extends WebSocket.Server {
-	constructor({ server, socketPath = '/api', settings }){//there was a ... before settings that was linted red
-		super({ noServer: !!server, settings });//this one too (I removed the dots and it still works..? So they weren't needed or used?)
+	constructor({ server, socketPath = '/api', ...settings }){
+		super({ noServer: !!server, ...settings });
 
 		if(!server) return Log.error()('socketServer requires a server!');
 
