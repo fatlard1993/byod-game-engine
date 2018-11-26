@@ -11,8 +11,9 @@ module.exports = class User extends EventEmitter {
   constructor(socketServer, socket){
 		super();
 
-		this.socket = socket;
 		this.id = uuid();
+		this.socket = socket;
+		this.socket.id = this.id;
 
     this.state = new ObservableObject({
 			name: `nameless #${this.id}`
