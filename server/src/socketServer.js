@@ -2,8 +2,6 @@ const WebSocket = require('ws');
 const Url = require('url');
 const Log = require('./log');
 const Constants = require('./constants');
-const User = require('./user');
-const UsersMap = require('./usersMap');
 
 module.exports = class SocketServer extends WebSocket.Server {
 	constructor({ server, socketPath = '/api', ...settings }){
@@ -52,33 +50,6 @@ module.exports = class SocketServer extends WebSocket.Server {
 
 				this.emit(Constants.USER_DISCONNECT, clientSocket);
 			});
-		});
-
-		this.on(Constants.USER_JOIN_GAME, (socket, userId) => {
-			let user;
-
-			if(userId && UsersMap[userId]){
-				user = UsersMap[userId];
-				user.socket = socket;
-				user.id = userId;
-				// Join existing game if still active
-			}
-
-			else{
-				user = new User(this, socket);
-
-				userId = user.id;
-
-				UsersMap[userId] = user;
-			}
-
-			UsersMap[userId].socket.id = userId;
-
-			socket.reply(Constants.USER_STATE_UPDATE, { id: userId });
-
-			Log.info()(`User ${userId} joined`);
-
-			socket.reply(Constants.USER_STATE_UPDATE, user.state);
 		});
 	}
 
