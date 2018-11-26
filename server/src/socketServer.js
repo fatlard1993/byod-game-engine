@@ -29,7 +29,8 @@ module.exports = class SocketServer extends WebSocket.Server {
 
 				Log.warn()('Send to client socket: ', message);
 
-				clientSocket.send(message);
+				if(clientSocket.readyState === WebSocket.OPEN) clientSocket.send(message);
+				else Log.error()('Client not connected');
 			};
 
 			clientSocket.on('message', (data) => {
