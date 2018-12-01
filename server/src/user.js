@@ -8,7 +8,7 @@ const Constants = require('./constants');
 const EventEmitter = require('events');
 
 class User extends EventEmitter {
-  constructor(socketServer, socket){
+  constructor(socketServer, socket, game){
 		super();
 
 		this.id = uuid();
@@ -20,7 +20,8 @@ class User extends EventEmitter {
 		Log(1)('New user state:', this.state);
 
 		this.state = new ObservableObject({
-			name: `nameless #${this.id}`
+			name: `nameless #${this.id}`,
+			gameId: game.id
 		});
 
     this.state.on('change', (event, property, value) => {

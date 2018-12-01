@@ -49,7 +49,7 @@ module.exports = class SocketServer extends WebSocket.Server {
 				this.emit(Constants.USER_DISCONNECT, socket);
 			});
 
-			this.emit('clientConnection', socket);
+			// this.emit('clientConnection', socket);
 		});
 	}
 
