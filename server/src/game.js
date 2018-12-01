@@ -3,7 +3,6 @@ const EventEmitter = require('events');
 const uuid = require('uuid/v4');
 
 const Log = require('./log');
-const Constants = require('./constants');
 const { ObservableObject } = require('./observables');
 
 class Game extends EventEmitter {
@@ -20,26 +19,14 @@ class Game extends EventEmitter {
 			socketServer.broadcast('gameState', { [property]: value });
 		});
 
-		socketServer.on('clientConnection', (socket) => {
-			socket.on('message', (data) => {
-				try{ data = JSON.parse(data); }
+		this.on(this.id, (socket, data) => {
+			this.emit(data.type, socket, data.payload);
+		});
 
-				catch(e){
-					Log.error()(data);
+		socketServer.on('clientMessage', (socket, data) => {
+			Log()('Client socket message: ', data.type, data.payload);
 
-					throw e;
-				}
-
-				Log()('Client socket message: ', data.type, data.payload);
-
-				this.emit(data.type, socket, data.payload);
-			});
-
-			socket.on('close', () => {
-				Log.warn()('Client socket disconnect: ');
-
-				this.emit(Constants.USER_DISCONNECT, socket);
-			});
+			this.emit(this.id, socket, data);
 		});
   }
 }
