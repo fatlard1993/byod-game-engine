@@ -32,6 +32,8 @@ module.exports = class SocketServer extends WebSocket.Server {
 			};
 
 			socket.on('message', (data) => {
+				Log()('(socketServer) Client socket message: ', data);
+
 				try{ data = JSON.parse(data); }
 
 				catch(e){
@@ -40,16 +42,14 @@ module.exports = class SocketServer extends WebSocket.Server {
 					throw e;
 				}
 
-				this.emit('clientMessage', socket, data);
+				const { type, payload } = data;
+
+				this.emit(type, payload, socket);
 			});
 
 			socket.on('close', () => {
-				Log.warn()('Client socket disconnect: ', socket.id);
-
-				this.emit(Constants.USER_DISCONNECT, socket);
+				this.emit(Constants.USER_DISCONNECT, socket.id);
 			});
-
-			// this.emit('clientConnection', socket);
 		});
 	}
 
@@ -63,5 +63,27 @@ module.exports = class SocketServer extends WebSocket.Server {
 		this.clients.forEach(function eachClient(client){
 			if(client.readyState === WebSocket.OPEN) client.send(message);
 		});
+	}
+
+	createEndpoint(name, getResponse){
+		const handler = (payload) => {
+			Log()('Endpoint handler: ', name, payload);
+
+			var res = getResponse(payload);
+
+			this.broadcast(name, res);
+
+			// const promise = Promise.resolve();
+
+			// promise.then(() => getResponse(payload));
+			// // promise.then((data) => this.emit(name, data));
+			// promise.catch((error) => Log.error()(error));
+		};
+
+		Log()('Applying handler: ', name);
+
+		this.on(name, handler);
+
+		return { destroy: () => this.removeListener(name, handler) };
 	}
 };

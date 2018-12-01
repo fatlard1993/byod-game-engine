@@ -30,8 +30,8 @@ class User extends EventEmitter {
       socket.reply('userState', { [property]: value });
 		});
 
-		socketServer.on(Constants.USER_STATE, ({ id }, state) => {
-			if(this.id === id) Object.assign(this.state, state);
+		socketServer.on(Constants.USER_STATE, (state, socket) => {
+			if(this.id === socket.id) Object.assign(this.state, state);
 		});
 	}
 
