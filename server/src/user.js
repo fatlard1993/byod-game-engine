@@ -11,6 +11,18 @@ class User extends EventEmitter {
   constructor(socketServer, socket){
 		super();
 
+		this.id = uuid();
+		this.socket = socket;
+		this.socket.id = this.id;
+
+    UsersMap[this.id] = this;
+
+		Log(1)('New user state:', this.state);
+
+		this.state = new ObservableObject({
+			name: `nameless #${this.id}`
+		});
+
     this.state.on('change', (event, property, value) => {
 			Log()('User state change - ', property, value);
 
@@ -20,18 +32,6 @@ class User extends EventEmitter {
 		socketServer.on(Constants.USER_STATE, ({ id }, state) => {
 			if(this.id === id) Object.assign(this.state, state);
 		});
-
-		this.id = uuid();
-		this.socket = socket;
-		this.socket.id = this.id;
-
-    this.state = new ObservableObject({
-			name: `nameless #${this.id}`
-		});
-
-    UsersMap[this.id] = this;
-
-		Log(1)('New user state:', this.state);
 	}
 
 	kill(){

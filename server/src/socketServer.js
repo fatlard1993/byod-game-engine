@@ -40,13 +40,11 @@ module.exports = class SocketServer extends WebSocket.Server {
 					throw e;
 				}
 
-				if(data.type === Constants.USER_JOIN_GAME) this.emit(data.type, socket, data.payload);
-
-				else this.emit('clientMessage', socket, data);
+				this.emit('clientMessage', socket, data);
 			});
 
 			socket.on('close', () => {
-				Log.warn()('Client socket disconnect: ');
+				Log.warn()('Client socket disconnect: ', socket.id);
 
 				this.emit(Constants.USER_DISCONNECT, socket);
 			});
