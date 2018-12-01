@@ -1,7 +1,6 @@
 const WebSocket = require('ws');
 const Url = require('url');
 const Log = require('./log');
-const Constants = require('./constants');
 
 module.exports = class SocketServer extends WebSocket.Server {
 	constructor({ server, socketPath = '/api', ...settings }){
@@ -21,36 +20,18 @@ module.exports = class SocketServer extends WebSocket.Server {
 			else socket.destroy();
 		});
 
-		// this.on('connection', (clientSocket) => {
-		// 	clientSocket.reply = (type, payload) => {
-		// 		var message = JSON.stringify({ type, payload });
+		this.on('connection', (clientSocket) => {
+			clientSocket.reply = (type, payload) => {
+				var message = JSON.stringify({ type, payload });
 
-		// 		Log.warn()('Send to client socket: ', message);
+				Log.warn()('Send to client socket: ', message);
 
-		// 		if(clientSocket.readyState === WebSocket.OPEN) clientSocket.send(message);
-		// 		else Log.error()('Client not connected');
-		// 	};
+				if(clientSocket.readyState === WebSocket.OPEN) clientSocket.send(message);
+				else Log.error()('Client not connected');
+			};
 
-		// 	clientSocket.on('message', (data) => {
-		// 		try{ data = JSON.parse(data); }
-
-		// 		catch(e){
-		// 			Log.error()(data);
-
-		// 			throw e;
-		// 		}
-
-		// 		Log()('Client socket message: ', data.type, data.payload);
-
-		// 		this.emit(data.type, clientSocket, data.payload);
-		// 	});
-
-		// 	clientSocket.on('close', () => {
-		// 		Log.warn()('Client socket disconnect: ');
-
-		// 		this.emit(Constants.USER_DISCONNECT, clientSocket);
-		// 	});
-		// });
+			this.emit('clientConnection', clientSocket);
+		});
 	}
 
 	broadcast(type, payload){

@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 
-const WebSocket = require('ws');
 const uuid = require('uuid/v4');
 
 const Log = require('./log');
@@ -21,17 +20,8 @@ module.exports = class Game extends EventEmitter {
 			socketServer.broadcast('gameState', { [property]: value });
 		});
 
-		socketServer.on('connection', (clientSocket) => {
-			clientSocket.reply = (type, payload) => {
-				var message = JSON.stringify({ type, payload });
-
-				Log.warn()('Send to client socket: ', message);
-
-				if(clientSocket.readyState === WebSocket.OPEN) clientSocket.send(message);
-				else Log.error()('Client not connected');
-			};
-
-			clientSocket.on('message', (data) => {
+		socketServer.on('clientConnection', (socket) => {
+			socket.on('message', (data) => {
 				try{ data = JSON.parse(data); }
 
 				catch(e){
@@ -42,13 +32,13 @@ module.exports = class Game extends EventEmitter {
 
 				Log()('Client socket message: ', data.type, data.payload);
 
-				this.emit(data.type, clientSocket, data.payload);
+				this.emit(data.type, socket, data.payload);
 			});
 
-			clientSocket.on('close', () => {
+			socket.on('close', () => {
 				Log.warn()('Client socket disconnect: ');
 
-				this.emit(Constants.USER_DISCONNECT, clientSocket);
+				this.emit(Constants.USER_DISCONNECT, socket);
 			});
 		});
   }
