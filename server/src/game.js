@@ -6,7 +6,7 @@ const Log = require('./log');
 const Constants = require('./constants');
 const { ObservableObject } = require('./observables');
 
-module.exports = class Game extends EventEmitter {
+class Game extends EventEmitter {
   constructor(socketServer){
 		super();
 
@@ -42,4 +42,6 @@ module.exports = class Game extends EventEmitter {
 			});
 		});
   }
-};
+}
+
+module.exports = Game;
