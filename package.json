@@ -31,6 +31,7 @@
 		"log": "github:fatlard1993/log#2.x.x",
 		"menu": "github:fatlard1993/menu#2.x.x",
 		"notify": "github:fatlard1993/notify#2.x.x",
+		"byod-game-engine": "github:fatlard1993/byod-game-engine",
 		"performance-now": "^2.1.0",
 		"socket-client": "github:fatlard1993/socket-client#2.x.x",
 		"websocket-server": "github:fatlard1993/websocket-server#2.x.x",
