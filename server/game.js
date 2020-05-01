@@ -3,13 +3,13 @@ const log = require('log');
 const WebsocketServer = require('websocket-server');
 
 class Game {
-  constructor(rootFolder, port){
+  constructor(rootFolder, port, homePath = '/lobby'){
 		this.id = uuid();
 		this.users = {};
 		this.rooms = {};
 		this.rootFolder = rootFolder;
 		this.port = port;
-		this.httpServer = require('http-server').init(port, rootFolder, '/lobby');
+		this.httpServer = require('http-server').init(port, rootFolder, homePath);
 		this.sockets = new WebsocketServer({ server: this.httpServer.app.server });
 
 		log(`[game] Started @ ${rootFolder} using port ${port}`);
