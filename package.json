@@ -16,8 +16,8 @@
 	"homepage": "https://github.com/fatlard1993/byod-game-engine#readme",
 	"devDependencies": {
 		"eslint-config-rules": "github:fatlard1993/eslint-config-rules#2.x.x",
-		"babel-eslint": "^10.0.3",
-		"eslint": "^6.4.0"
+		"babel-eslint": "^10.1.0",
+		"eslint": "^6.8.0"
 	},
 	"dependencies": {
 		"cardcast-api": "^0.2.3",
@@ -35,7 +35,7 @@
 		"performance-now": "^2.1.0",
 		"socket-client": "github:fatlard1993/socket-client#2.x.x",
 		"websocket-server": "github:fatlard1993/websocket-server#2.x.x",
-		"yargs": "^14.0.0",
-		"uuid": "^3.3.3"
+		"yargs": "^15.3.1",
+		"uuid": "^8.0.0"
 	}
 }
