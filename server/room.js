@@ -40,9 +40,7 @@ class Room {
 		var message = JSON.stringify({ type, payload });
 
 		this.playerNames.forEach((playerName) => {
-			log(playerName, this.players[playerName].readyState);
-
-			if(this.players[playerName].readyState === 1) this.players[playerName].send(message);
+			if(!this.players[playerName].socket && this.players[playerName].socket.readyState === 1) this.players[playerName].socket.send(message);
 		});
 	}
 }
