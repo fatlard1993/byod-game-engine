@@ -35,12 +35,12 @@ class Room {
 	}
 
 	broadcast(type, payload){
-		log('broadcast', type, payload);
+		log('broadcast', type, payload, this.playerNames);
 
 		var message = JSON.stringify({ type, payload });
 
 		this.playerNames.forEach((playerName) => {
-			if(!this.players[playerName].socket && this.players[playerName].socket.readyState === 1) this.players[playerName].socket.send(message);
+			if(this.players[playerName].socket && this.players[playerName].socket.readyState === 1) this.players[playerName].socket.send(message);
 		});
 	}
 }
