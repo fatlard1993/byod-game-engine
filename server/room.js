@@ -35,7 +35,7 @@ class Room {
 	}
 
 	broadcast(type, payload){
-		log('broadcast', type, payload, this.playerNames);
+		log(1)('broadcast', type, payload, this.playerNames);
 
 		var message = JSON.stringify({ type, payload });
 
