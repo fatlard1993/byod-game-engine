@@ -1,5 +1,5 @@
 const uuid = require('uuid').v4;
-const log = require('log');
+const log = new (require('log'))({ tag: 'byod-game-engine' });
 const WebsocketServer = require('websocket-server');
 
 class Game {

@@ -1,4 +1,4 @@
-const log = require('log');
+const log = new (require('log'))({ tag: 'byod-game-engine' });
 
 class Room {
 	constructor(options, game){
