@@ -1,12 +1,13 @@
+const { nanoid } = require('nanoid');
 const log = new (require('log'))({ tag: 'byod-game-engine' });
 
 class Room {
-	constructor(options, game){
-		this.game = game;
+	constructor(options) {
+		this.id = nanoid(7);
 		this.options = options;
 		this.name = options.name;
 		this.players = {};
-		this.playerNames = [];
+		this.playerIds = [];
 		this.state = {};
 
 		log(`[room - ${this.name}] Create`);
@@ -18,12 +19,26 @@ class Room {
 
 		player.state = 'joining';
 
-		if(!this.players[player.name]) this.players[player.name] = player
+		const existingPlayer = this.getPlayerByName(player.name);
 
-		this.playerNames = Object.keys(this.players);
-		this.playerCount = this.playerNames.length;
+		if (existingPlayer) {
+			this.players[existingPlayer.id] = { ...existingPlayer, ...player };
+		} else {
+			player.id = nanoid(7);
+
+			this.players[player.id] = player;
+		}
+
+		this.playerIds = Object.keys(this.players);
+		this.playerCount = this.playerIds.length;
 
 		return player;
+	}
+
+	getPlayerByName(name) {
+		const playerId = this.playerIds.find(id => this.players[id].name === name);
+
+		return playerId && this.players[playerId];
 	}
 
 	removePlayer(player){
@@ -35,12 +50,14 @@ class Room {
 	}
 
 	broadcast(type, payload){
-		log(1)('broadcast', type, payload, this.playerNames);
+		log(1)('broadcast', type, payload, this.playerIds);
 
 		var message = JSON.stringify({ type, payload });
 
-		this.playerNames.forEach((playerName) => {
-			if(this.players[playerName].socket && this.players[playerName].socket.readyState === 1) this.players[playerName].socket.send(message);
+		this.playerIds.forEach((id) => {
+			const socket = this.players[id].socket;
+
+			if(socket && socket.readyState === 1) socket.send(message);
 		});
 	}
 }
