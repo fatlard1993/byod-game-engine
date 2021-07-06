@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const log = new (require('log'))({ tag: 'byod-game-engine' });
+const log = new (require('log'))({ tag: 'byod-game-engine', verbosity: 1 });
 
 class Room {
 	constructor({ name, ...options }) {
@@ -9,6 +9,8 @@ class Room {
 		this.players = {};
 		this.playerIds = [];
 		this.state = {};
+
+		if (typeof options.verbosity !== 'undefined') log.options.verbosity = options.verbosity;
 
 		log(`Created Game Room "${this.name}"`);
 		log(1)(options);

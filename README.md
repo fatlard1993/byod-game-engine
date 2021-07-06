@@ -1,8 +1,9 @@
 # byod-game-engine
 
 ```
-Game (rootFolder, port, homePath = '/lobby') {
+Game ({ rootFolder, port, verbosity, homePath = '/lobby', ...options }') {
 	id: nanoid(7),
+	options,
 	rooms: { GameRoom.id, ... },
 	rootFolder,
 	port,
