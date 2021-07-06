@@ -12,7 +12,7 @@ Game (rootFolder, port, homePath = '/lobby') {
 ```
 
 ```
-GameRoom ({ ...options, name }) {
+GameRoom ({ name, ...options }) {
 	id: nanoid(7),
 	options,
 	name,

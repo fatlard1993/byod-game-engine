@@ -2,7 +2,7 @@ const { nanoid } = require('nanoid');
 const log = new (require('log'))({ tag: 'byod-game-engine' });
 
 class Room {
-	constructor({ ...options, name }) {
+	constructor({ name, ...options }) {
 		this.id = nanoid(7);
 		this.options = options;
 		this.name = name;
